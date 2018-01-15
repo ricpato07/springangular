@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +28,7 @@ public class LoginController {
     private ResponseEntity<?> list() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            List<Usuarios> result = loginService.getUsers();
+            List<UsuarioWebmx> result = loginService.getUsers();
 
             if (result != null && result.size() > 0) {
                 return new ResponseEntity<String>(mapper.writeValueAsString(result), HttpStatus.OK);
@@ -39,8 +40,26 @@ public class LoginController {
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
+    
+     @RequestMapping(value = "/user", method = RequestMethod.GET)
+    private ResponseEntity<?> getUser(@RequestParam(value = "user") String user) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            
+            UsuarioWebmx usuario = loginService.getUser(user);
+                    
+            if (usuario != null) {
+                return new ResponseEntity<String>(mapper.writeValueAsString(usuario), HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            System.out.println("Error method:" + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.SERVICE_UNAVAILABLE);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE})
     private ResponseEntity<?> login(@RequestBody Usuarios usuarios) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         try {

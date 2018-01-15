@@ -79,7 +79,7 @@ public class LoginServiceImpl implements LoginService {
         }
     }
     
-    private UsuarioWebmx getUser(String user) {
+    public UsuarioWebmx getUser(String user) {
         try {
             StringBuilder sql = new StringBuilder();
             sql.append(" select * from mexweb.USUARIO_WEBMX");
@@ -101,12 +101,12 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     @Transactional
-    public List<Usuarios> getUsers() {
+    public List<UsuarioWebmx> getUsers() {
         try {
-            String query = "SELECT * FROM RGARCIAU.USUARIOS";
+            String query = "SELECT * FROM MEXWEB.USUARIO_WEBMX WHERE LOGIN LIKE 'rgarciau'";
             SQLQuery SQLquery = getSession().createSQLQuery(query);
-            SQLquery.addEntity(Usuarios.class);
-            List<Usuarios> result = SQLquery.list();
+            SQLquery.addEntity(UsuarioWebmx.class);
+            List<UsuarioWebmx> result = SQLquery.list();
 
             if (result != null && result.size() > 0) {
                 return result;
